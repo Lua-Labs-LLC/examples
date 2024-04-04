@@ -14,7 +14,7 @@ export async function signInSignUp(walletAddress: string) {
     .select()
     .from(WalletTable)
     .where(and(eq(WalletTable.walletAddress, walletAddress)))
-  if (existingWallet.userId) {
+  if (existingWallet?.userId) {
     userId = existingWallet.userId
   } else {
     userId = generateId(15)
