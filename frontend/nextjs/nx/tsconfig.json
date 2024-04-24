@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@nx/shared": ["shared/src/index.ts"],
+      "@nx/shared/*": ["shared/src/*"]
+    }
+  }
+}
