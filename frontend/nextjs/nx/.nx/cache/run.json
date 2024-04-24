@@ -1,0 +1,9 @@
+{
+  "run": {
+    "command": "nx run app-a:dev",
+    "startTime": "2024-04-24T03:56:54.252Z",
+    "endTime": "2024-04-24T04:29:19.779Z",
+    "inner": false
+  },
+  "tasks": []
+}
