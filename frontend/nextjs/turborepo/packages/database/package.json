@@ -1,0 +1,30 @@
+{
+  "name": "@repo/database",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./src/*": "./src/*.ts"
+  },
+  "scripts": {
+    "generate:component": "turbo gen react-component",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@turbo/gen": "^1.12.4",
+    "@types/aws-lambda": "8.10.137",
+    "@types/eslint": "^8.56.5",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "eslint": "^8.57.0",
+    "react": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.30.9",
+    "postgres": "^3.4.4",
+    "sst": "ion"
+  }
+}

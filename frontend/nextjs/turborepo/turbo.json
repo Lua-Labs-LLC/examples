@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalDotEnv": [".env"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "NEXTAUTH_JWT_SECRET",
+    "DATABASE_NAME",
+    "DATABASE_SECRET_ARN",
+    "DATABASE_RESOURCE_ARN"
+  ],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
