@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.598.0",
+    "@aws-sdk/client-iot": "^3.598.0",
+    "@aws-sdk/client-iot-data-plane": "^3.598.0",
     "@aws-sdk/util-dynamodb": "^3.598.0",
     "aws-iot-device-sdk-v2": "^1.19.5",
     "aws-sdk": "^2.1643.0",

@@ -4,13 +4,16 @@ import { lucia } from "./auth/lucia";
 
 export const handler = realtime.authorizer(async (token) => {
   const prefix = `${Resource.App.name}/${Resource.App.stage}`;
+  return {
+    subscribe: [`${prefix}/*`],
+  };
   try {
     if (!token) {
       throw new Error("No token provided");
     }
     const result = await lucia.validateSession(token);
 
-    if (!result.session) {
+    if (!result.session || !result.session.fresh) {
       throw new Error("Invalid or stale session");
     }
     console.log(result);

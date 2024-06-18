@@ -7,6 +7,7 @@ const topic = "sst-chat";
 
 export default async function Home() {
   const { userId, sessionId } = await getUser();
+
   return (
     <main>
       <div>

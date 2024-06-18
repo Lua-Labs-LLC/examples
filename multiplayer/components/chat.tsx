@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { iot, mqtt } from "aws-iot-device-sdk-v2";
 import styles from "./chat.module.css";
+import { sendMessage } from "@/server-actions/messages/send-message";
 
 function createConnection(
   endpoint: string,
@@ -39,7 +40,6 @@ export default function Chat({
 
   useEffect(() => {
     if (!token) return;
-    console.log(token);
     const connection = createConnection(endpoint, authorizer, token);
 
     connection.on("connect", async () => {
@@ -64,7 +64,7 @@ export default function Chat({
 
   return (
     <div className={styles.chat}>
-      {connection && messages.length > 0 && (
+      {messages.length > 0 && (
         <div className={styles.messages}>
           {messages.map((msg, i) => (
             <div key={i}>{msg}</div>
@@ -78,7 +78,7 @@ export default function Chat({
 
           const input = (e.target as HTMLFormElement).message;
 
-          connection!.publish(topic, input.value, mqtt.QoS.AtLeastOnce);
+          await sendMessage(input.value);
           input.value = "";
         }}
       >
@@ -89,9 +89,7 @@ export default function Chat({
           name="message"
           placeholder={connection ? "Ready! Say hello..." : "Connecting..."}
         />
-        <button type="submit" disabled={connection === null}>
-          Send
-        </button>
+        <button type="submit">Send</button>
       </form>
     </div>
   );
