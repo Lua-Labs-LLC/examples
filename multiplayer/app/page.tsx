@@ -6,7 +6,7 @@ import { Logout } from "@/components/logout";
 const topic = "sst-chat";
 
 export default async function Home() {
-  const { userId } = await getUser();
+  const { userId, sessionId } = await getUser();
   return (
     <main>
       <div>
@@ -14,6 +14,7 @@ export default async function Home() {
           endpoint={Resource.MyRealtime.endpoint}
           authorizer={Resource.MyRealtime.authorizer}
           topic={`${Resource.App.name}/${Resource.App.stage}/${topic}`}
+          token={sessionId}
         />
       </div>
       {!userId && <SignIn></SignIn>}

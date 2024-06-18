@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { iot, mqtt } from "aws-iot-device-sdk-v2";
 import styles from "./chat.module.css";
 
-function createConnection(endpoint: string, authorizer: string) {
+function createConnection(
+  endpoint: string,
+  authorizer: string,
+  token?: string
+) {
   const client = new mqtt.MqttClient();
   const id = window.crypto.randomUUID();
 
@@ -13,7 +17,7 @@ function createConnection(endpoint: string, authorizer: string) {
       .with_clean_session(true)
       .with_client_id(`client_${id}`)
       .with_endpoint(endpoint)
-      .with_custom_authorizer("", authorizer, "", "PLACEHOLDER_TOKEN")
+      .with_custom_authorizer("", authorizer, "", token || "")
       .build()
   );
 }
@@ -22,17 +26,21 @@ export default function Chat({
   topic,
   endpoint,
   authorizer,
+  token,
 }: {
   topic: string;
   endpoint: string;
   authorizer: string;
+  token?: string;
 }) {
   const [messages, setMessages] = useState<string[]>([]);
   const [connection, setConnection] =
     useState<mqtt.MqttClientConnection | null>(null);
 
   useEffect(() => {
-    const connection = createConnection(endpoint, authorizer);
+    if (!token) return;
+    console.log(token);
+    const connection = createConnection(endpoint, authorizer, token);
 
     connection.on("connect", async () => {
       try {
@@ -52,7 +60,7 @@ export default function Chat({
       connection.disconnect();
       setConnection(null);
     };
-  }, [topic, endpoint, authorizer]);
+  }, [topic, endpoint, authorizer, token]);
 
   return (
     <div className={styles.chat}>

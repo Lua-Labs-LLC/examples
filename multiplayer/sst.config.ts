@@ -29,7 +29,10 @@ export default $config({
     });
 
     const realtime = new sst.aws.Realtime("MyRealtime", {
-      authorizer: "authorizer.handler",
+      authorizer: {
+        handler: "authorizer.handler",
+        link: [sessionTable, userTable],
+      },
     });
 
     new sst.aws.Nextjs("MyWeb", {

@@ -7,7 +7,7 @@ import { lucia } from "./lucia";
 export const getUser = async () => {
   const { session, user } = await validateRequest();
   if (!session) return { userId: undefined };
-  return { userId: user.id };
+  return { userId: user.id, sessionId: session.id };
 };
 
 // Validates a lucia auth session
