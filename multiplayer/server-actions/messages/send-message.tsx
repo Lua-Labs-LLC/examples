@@ -14,7 +14,7 @@ const client = new IoTDataPlaneClient({
 const prefix = `${Resource.App.name}/${Resource.App.stage}`;
 
 export const sendMessage = async (message: string, gameId: string) => {
-  const topic = `${prefix}/sst-chat`; // Specific topic for messages
+  const topic = `${prefix}/${gameId}`; // Specific topic for messages
 
   try {
     const command = new PublishCommand({

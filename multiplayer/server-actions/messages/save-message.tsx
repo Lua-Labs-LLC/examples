@@ -30,7 +30,6 @@ export const saveMessage = async (message: string, gameId: string) => {
         UpdateExpression:
           "SET chatHistory = list_append(if_not_exists(chatHistory, :empty_list), :message)",
         ExpressionAttributeValues: marshalledValues,
-        ConditionExpression: "attribute_exists(gameId)",
       })
     );
   } catch (error) {

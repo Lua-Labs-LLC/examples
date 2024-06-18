@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 const topic = "sst-chat";
 
 export default async function Home() {
-  const { userId, sessionId } = await getUser();
+  const { userId } = await getUser();
 
   return (
     <div className="flex flex-col items-center justify-center gap-6">
-      <h1 className="text-7xl">WOLVES POC</h1>
+      <h1 className="text-7xl uppercase">Multiplayer</h1>
       {!userId && <SignIn></SignIn>}
       {userId && (
         <>
