@@ -1,19 +1,18 @@
 "use server";
-
+import "server-only";
 import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { Resource } from "sst";
 import { marshall } from "@aws-sdk/util-dynamodb";
 import { validateRequest } from "@/auth/auth-guard";
-import { getCurrentUnixTimestamp } from "@/lib/get-unix-timestamp";
+import { getCurrentUnixTimestamp } from "@/lib/unix-timestamp";
+import { Message } from "@/models/message";
 
-export const saveMessage = async (message: string, gameId: string) => {
+export const saveMessage = async (message: Message, gameId: string) => {
   const { user } = await validateRequest();
   if (!user) throw new Error(`PERMISSION DENIED`);
   const dynamoDBClient = new DynamoDBClient({});
   const messageItem = {
-    userId: user.id,
-    message,
-    timestamp: getCurrentUnixTimestamp(),
+    ...message,
   };
 
   const marshalledKey = marshall({ gameId: gameId });

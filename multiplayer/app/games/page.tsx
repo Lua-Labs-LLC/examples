@@ -14,9 +14,9 @@ export default async function Games() {
         <ul className="flex flex-col items-center justify-center gap-4">
           {games.map((game) => {
             return (
-              <Link key={game["gameId"]} href={`/games/${game["gameId"]}`}>
+              <Link key={game.gameId} href={`/games/${game.gameId}`}>
                 <li>
-                  <Button variant="outline">{game["gameId"]}</Button>
+                  <Button variant="outline">{game.gameId}</Button>
                 </li>
               </Link>
             );

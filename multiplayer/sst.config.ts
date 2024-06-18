@@ -48,6 +48,8 @@ export default $config({
           rangeKey: "createdAt", // Sort key to sort by creation time
         },
       },
+      stream: "new-and-old-images",
+      ttl: "expiresAt",
     });
 
     const realtime = new sst.aws.Realtime("MyRealtime", {

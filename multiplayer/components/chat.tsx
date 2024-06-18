@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { iot, mqtt } from "aws-iot-device-sdk-v2";
 import styles from "./chat.module.css";
 import { sendMessage } from "@/server-actions/messages/send-message";
+import { userSendMessage } from "@/server-actions/messages/user-send-message";
+import { ChatMessage, Message } from "@/models/message";
 
 function createConnection(endpoint: string, authorizer: string, token: string) {
   const client = new mqtt.MqttClient();
@@ -32,14 +34,15 @@ export default function Chat({
   authorizer: string;
   token: string;
   gameId: string;
-  chatHistory: any[];
+  chatHistory: ChatMessage[];
 }) {
   const [messages, setMessages] = useState<string[]>([]);
   const [connection, setConnection] =
     useState<mqtt.MqttClientConnection | null>(null);
 
   useEffect(() => {
-    setMessages(chatHistory.map((m) => m.message));
+    console.log(chatHistory);
+    setMessages(chatHistory.map((m) => m.payload.message));
     const connection = createConnection(endpoint, authorizer, token);
 
     connection.on("connect", async () => {
@@ -49,8 +52,10 @@ export default function Chat({
       } catch (e) {}
     });
     connection.on("message", (_fullTopic, payload) => {
-      const message = new TextDecoder("utf8").decode(new Uint8Array(payload));
-      setMessages((prev) => [...prev, message]);
+      const message = JSON.parse(
+        new TextDecoder("utf8").decode(new Uint8Array(payload))
+      );
+      setMessages((prev) => [...prev, message.payload.message]);
     });
     connection.on("error", console.error);
 
@@ -78,7 +83,7 @@ export default function Chat({
 
           const input = (e.target as HTMLFormElement).message;
 
-          await sendMessage(input.value, gameId);
+          await userSendMessage(input.value, gameId);
           input.value = "";
         }}
       >

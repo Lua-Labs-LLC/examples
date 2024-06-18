@@ -6,6 +6,9 @@ import { generateId } from "lucia";
 import { revalidatePath } from "next/cache";
 import { Resource } from "sst";
 import { sendMessage } from "../messages/send-message";
+import { GameStatus } from "@/models/game";
+import { MessageType } from "@/models/message";
+import { getCurrentUnixTimestamp } from "@/lib/unix-timestamp";
 
 export const createGame = async () => {
   const { userId } = await getUser();
@@ -18,18 +21,28 @@ export const createGame = async () => {
       new PutItemCommand({
         TableName: Resource.GameTable.name,
         Item: {
-          gameId: { S: gameId }, // S: denotes a string type in DynamoDB
-          initiatorId: { S: userId }, // Example, generating a dummy user ID for initiator
-          status: { S: "waiting" }, // Initial game status, could be 'waiting', 'in progress', etc.
-          expiresAt: { N: (Math.floor(Date.now() / 1000) + 86400).toString() }, // Expires in 24 hours
-          createdAt: { N: Math.floor(Date.now() / 1000).toString() }, // Expires in 24 hours
-          chatHistory: { L: [] }, // Initialize an empty chat history
+          gameId: { S: gameId },
+          initiatorId: { S: userId },
+          status: { S: GameStatus.Waiting },
+          expiresAt: { N: (Math.floor(Date.now() / 1000) + 86400).toString() },
+          createdAt: { N: Math.floor(Date.now() / 1000).toString() },
+          chatHistory: { L: [] },
           constantKey: { S: "constantKey" },
         },
-        ConditionExpression: "attribute_not_exists(gameId)", // Ensures game with this ID doesn't already exist
+        ConditionExpression: "attribute_not_exists(gameId)",
       })
     );
-    await sendMessage(`game created: ${userId}`, gameId);
+    await sendMessage(
+      {
+        type: MessageType.Chat,
+        payload: {
+          type: "Admin",
+          message: `Game Created: ${userId}`,
+          timestamp: getCurrentUnixTimestamp(),
+        },
+      },
+      gameId
+    );
     revalidatePath("/");
     console.log(`Game created successfully with ID: ${gameId}`);
   } catch (error) {

@@ -3,6 +3,7 @@
 import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
 import { Resource } from "sst";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { Game } from "@/models/game";
 
 export const getRecentGames = async () => {
   const dynamoDBClient = new DynamoDBClient({});
@@ -22,7 +23,7 @@ export const getRecentGames = async () => {
     );
 
     if (!result.Items) throw new Error(`Failed to retrieve recent games`);
-    const games = result.Items.map((item) => unmarshall(item));
+    const games = result.Items.map((item) => unmarshall(item)) as Game[];
     return games;
   } catch (error) {
     console.error("Error querying DynamoDB:", error);

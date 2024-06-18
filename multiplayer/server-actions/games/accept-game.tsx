@@ -3,37 +3,47 @@
 import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { Resource } from "sst";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { getUser, validateRequest } from "@/auth/auth-guard";
+import { getUser } from "@/auth/auth-guard";
 import { revalidatePath } from "next/cache";
 import { sendMessage } from "../messages/send-message";
-import { getCurrentUnixTimestamp } from "@/lib/unix-timestamp";
+import {
+  getCurrentUnixTimestamp,
+  isCurrentTimeGreaterThan,
+} from "@/lib/unix-timestamp";
+import { getGameById } from "./get-game-by-id";
 import { GameStatus } from "@/models/game";
 import { MessageType } from "@/models/message";
 
-export const joinGame = async (gameId: string) => {
+export const acceptGame = async (gameId: string) => {
   const { userId } = await getUser();
+
   if (!userId) throw new Error(`PERMISSION DENIED`);
   const dynamoDBClient = new DynamoDBClient({});
 
   const marshalledKey = marshall({ gameId: gameId });
   const marshalledValues = marshall({
-    ":timeToAccept": getCurrentUnixTimestamp() + 30,
-    ":secondPlayerId": userId,
-    ":status": GameStatus.Starting,
+    ":status": GameStatus.Started,
   });
 
   try {
+    const game = await getGameById(gameId);
+
+    if (
+      game.initiatorId !== userId ||
+      isCurrentTimeGreaterThan(game.timeToAccept) ||
+      game.status !== "Starting"
+    ) {
+      throw "ERROR";
+    }
     await dynamoDBClient.send(
       new UpdateItemCommand({
         TableName: Resource.GameTable.name,
         Key: marshalledKey,
-        UpdateExpression:
-          "SET secondPlayerId = :secondPlayerId, #status = :status, timeToAccept = :timeToAccept",
+        UpdateExpression: "SET #status = :status",
         ExpressionAttributeValues: marshalledValues,
         ExpressionAttributeNames: {
-          "#status": "status", // This maps #status to the actual attribute name "status"
+          "#status": "status",
         },
-        ConditionExpression: "attribute_not_exists(secondPlayerId)",
       })
     );
     await sendMessage(
@@ -41,7 +51,7 @@ export const joinGame = async (gameId: string) => {
         type: MessageType.Chat,
         payload: {
           type: "Admin",
-          message: `Player Joined: ${userId}`,
+          message: "Game Starting",
           timestamp: getCurrentUnixTimestamp(),
         },
       },
