@@ -3,6 +3,7 @@
 import { validateRequest } from "@/auth/auth-guard";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { generateId } from "lucia";
+import { revalidatePath } from "next/cache";
 import { Resource } from "sst";
 
 export const createGame = async () => {
@@ -29,6 +30,7 @@ export const createGame = async () => {
         ConditionExpression: "attribute_not_exists(gameId)", // Ensures game with this ID doesn't already exist
       })
     );
+    revalidatePath("/");
     console.log(`Game created successfully with ID: ${gameId}`);
   } catch (error) {
     console.error("Error creating game in DynamoDB:", error);
