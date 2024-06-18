@@ -13,6 +13,7 @@
     "@aws-sdk/client-iot": "^3.598.0",
     "@aws-sdk/client-iot-data-plane": "^3.598.0",
     "@aws-sdk/util-dynamodb": "^3.598.0",
+    "@radix-ui/react-slot": "^1.0.2",
     "aws-iot-device-sdk-v2": "^1.19.5",
     "aws-sdk": "^2.1643.0",
     "class-variance-authority": "^0.7.0",

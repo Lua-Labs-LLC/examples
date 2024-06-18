@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { getRecentGames } from "@/server-actions/games/get-recent-games";
 import Link from "next/link";
 
@@ -6,13 +7,15 @@ export default async function Games() {
   console.log(games);
   return (
     <>
-      <h1>Games</h1>
-      <div className="flex flex-col items-center justify-center">
-        <ul>
+      <div className="flex flex-col items-center justify-center gap-4">
+        <h1 className="text-7xl">Recent Games</h1>
+        <ul className="flex flex-col items-center justify-center gap-4">
           {games.map((game) => {
             return (
               <Link key={game["gameId"]} href={`/games/${game["gameId"]}`}>
-                <li>{game["gameId"]}</li>
+                <li>
+                  <Button variant="outline">{game["gameId"]}</Button>
+                </li>
               </Link>
             );
           })}

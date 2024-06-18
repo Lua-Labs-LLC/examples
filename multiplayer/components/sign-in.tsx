@@ -1,10 +1,11 @@
 "use client";
 
 import { signInSignUp } from "@/server-actions/authentication/sign-in-sign-up";
+import { Button } from "./ui/button";
 
 export const SignIn = () => {
   const action = async () => {
     await signInSignUp();
   };
-  return <button onClick={() => action()}>Sign Up / Sign In</button>;
+  return <Button onClick={() => action()}>Sign Up / Sign In</Button>;
 };

@@ -5,11 +5,7 @@ import { iot, mqtt } from "aws-iot-device-sdk-v2";
 import styles from "./chat.module.css";
 import { sendMessage } from "@/server-actions/messages/send-message";
 
-function createConnection(
-  endpoint: string,
-  authorizer: string,
-  token?: string
-) {
+function createConnection(endpoint: string, authorizer: string, token: string) {
   const client = new mqtt.MqttClient();
   const id = window.crypto.randomUUID();
 
@@ -28,18 +24,22 @@ export default function Chat({
   endpoint,
   authorizer,
   token,
+  gameId,
+  chatHistory,
 }: {
   topic: string;
   endpoint: string;
   authorizer: string;
-  token?: string;
+  token: string;
+  gameId: string;
+  chatHistory: any[];
 }) {
   const [messages, setMessages] = useState<string[]>([]);
   const [connection, setConnection] =
     useState<mqtt.MqttClientConnection | null>(null);
 
   useEffect(() => {
-    if (!token) return;
+    setMessages(chatHistory.map((m) => m.message));
     const connection = createConnection(endpoint, authorizer, token);
 
     connection.on("connect", async () => {
@@ -60,7 +60,7 @@ export default function Chat({
       connection.disconnect();
       setConnection(null);
     };
-  }, [topic, endpoint, authorizer, token]);
+  }, [topic, endpoint, authorizer, token, chatHistory]);
 
   return (
     <div className={styles.chat}>
@@ -78,7 +78,7 @@ export default function Chat({
 
           const input = (e.target as HTMLFormElement).message;
 
-          await sendMessage(input.value, "ccm7sfpnb6q183r");
+          await sendMessage(input.value, gameId);
           input.value = "";
         }}
       >

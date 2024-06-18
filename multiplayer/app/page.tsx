@@ -4,27 +4,25 @@ import { SignIn } from "@/components/sign-in";
 import { getUser } from "@/auth/auth-guard";
 import { Logout } from "@/components/logout";
 import { CreateGame } from "@/components/create-game";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 const topic = "sst-chat";
 
 export default async function Home() {
   const { userId, sessionId } = await getUser();
 
   return (
-    <main>
-      <div>
-        <Chat
-          endpoint={Resource.MyRealtime.endpoint}
-          authorizer={Resource.MyRealtime.authorizer}
-          topic={`${Resource.App.name}/${Resource.App.stage}/${topic}`}
-          token={sessionId}
-        />
-      </div>
+    <div className="flex flex-col items-center justify-center gap-6">
+      <h1 className="text-7xl">WOLVES POC</h1>
       {!userId && <SignIn></SignIn>}
       {userId && (
         <>
-          <Logout></Logout> <CreateGame></CreateGame>
+          <Link href="/games">
+            <Button variant="outline">View Games</Button>
+          </Link>
+          <Logout></Logout>
         </>
       )}
-    </main>
+    </div>
   );
 }
