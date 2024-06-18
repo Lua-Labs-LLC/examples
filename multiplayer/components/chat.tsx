@@ -78,7 +78,7 @@ export default function Chat({
 
           const input = (e.target as HTMLFormElement).message;
 
-          await sendMessage(input.value);
+          await sendMessage(input.value, "ccm7sfpnb6q183r");
           input.value = "";
         }}
       >

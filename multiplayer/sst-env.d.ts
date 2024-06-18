@@ -3,6 +3,10 @@
 import "sst"
 declare module "sst" {
   export interface Resource {
+    GameTable: {
+      name: string
+      type: "sst.aws.Dynamo"
+    }
     MyRealtime: {
       authorizer: string
       endpoint: string

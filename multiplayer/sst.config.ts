@@ -27,16 +27,38 @@ export default $config({
         UserIndex: { hashKey: "userId", rangeKey: "expiresAt" },
       },
     });
+    const gameTable = new sst.aws.Dynamo("GameTable", {
+      fields: {
+        gameId: "string",
+        initiatorId: "string",
+        expiresAt: "number",
+        createdAt: "number",
+        constantKey: "string", // Field for the constant partition key
+      },
+      primaryIndex: {
+        hashKey: "gameId",
+      },
+      globalIndexes: {
+        InitiatorIndex: {
+          hashKey: "initiatorId",
+          rangeKey: "expiresAt",
+        },
+        RecentGamesIndex: {
+          hashKey: "constantKey", // A constant value to partition all items in a single partition
+          rangeKey: "createdAt", // Sort key to sort by creation time
+        },
+      },
+    });
 
     const realtime = new sst.aws.Realtime("MyRealtime", {
       authorizer: {
         handler: "authorizer.handler",
-        link: [sessionTable, userTable],
+        link: [sessionTable, userTable, gameTable],
       },
     });
 
     new sst.aws.Nextjs("MyWeb", {
-      link: [realtime, sessionTable, userTable],
+      link: [realtime, sessionTable, userTable, gameTable],
     });
   },
 });
