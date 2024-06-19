@@ -41,7 +41,7 @@ export const joinGame = async (gameId: string) => {
         type: MessageType.Chat,
         payload: {
           type: "Admin",
-          message: `Player Joined: ${userId}`,
+          message: "Player Joined",
           timestamp: getCurrentUnixTimestamp(),
         },
       },

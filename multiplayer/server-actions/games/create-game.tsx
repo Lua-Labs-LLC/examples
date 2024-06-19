@@ -37,7 +37,7 @@ export const createGame = async () => {
         type: MessageType.Chat,
         payload: {
           type: "Admin",
-          message: `Game Created: ${userId}`,
+          message: `Game Created`,
           timestamp: getCurrentUnixTimestamp(),
         },
       },

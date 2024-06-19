@@ -19,7 +19,7 @@ export interface BaseMessage {
 }
 
 export interface GameActionMessage extends BaseMessage {
-  type: MessageType.GameAction;
+  type: "GameAction";
   payload: {
     userId: string;
     timestamp: number;
@@ -34,19 +34,19 @@ interface BaseChatPayload {
   message: string;
 }
 
-interface AdminChatPayload extends BaseChatPayload {
+export interface AdminChatPayload extends BaseChatPayload {
   type: "Admin";
 }
 
-interface UserChatPayload extends BaseChatPayload {
+export interface UserChatPayload extends BaseChatPayload {
   type: "User";
   userId: string;
 }
 
-type ChatPayload = AdminChatPayload | UserChatPayload;
+export type ChatPayload = AdminChatPayload | UserChatPayload;
 
 export interface ChatMessage extends BaseMessage {
-  type: MessageType.Chat;
+  type: "Chat";
   payload: ChatPayload;
 }
 
