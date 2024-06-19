@@ -1,37 +1,14 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import { iot, mqtt } from "aws-iot-device-sdk-v2";
-import { userSendMessage } from "@/server-actions/messages/user-send-message";
-import { ChatMessage } from "@/models/message";
+import { unstable_noStore as noStore } from "next/cache";
+import { useContext } from "react";
 import { Message } from "./message/message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useMqtt } from "@/hooks/use-mqtt";
+import { GameContext } from "../../game-provider";
 
-export default function Chat({
-  topic,
-  endpoint,
-  authorizer,
-  token,
-  gameId,
-  chatHistory,
-}: {
-  topic: string;
-  endpoint: string;
-  authorizer: string;
-  token: string;
-  gameId: string;
-  chatHistory: ChatMessage[];
-}) {
-  const { messages, sendMessage, isConnected } = useMqtt(
-    topic,
-    endpoint,
-    authorizer,
-    token,
-    chatHistory
-  );
-
+export default function Chat() {
+  noStore();
+  const { messages, sendMessage, game, isConnected } = useContext(GameContext);
   return (
     <div className=" w-[320px] h-[320px] flex flex-col justify-between">
       {messages.length > 0 && (
@@ -47,7 +24,7 @@ export default function Chat({
 
           const input = (e.target as HTMLFormElement).message;
 
-          await sendMessage(input.value, gameId);
+          await sendMessage(input.value, game.gameId);
           input.value = "";
         }}
       >

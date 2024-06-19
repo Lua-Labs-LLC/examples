@@ -3,8 +3,8 @@
 import { sendMessage } from "./send-message";
 import { getGameById } from "../games/get-game-by-id";
 import { getUser } from "@/auth/auth-guard";
-import { Message, MessageType } from "@/models/message";
 import { getCurrentUnixTimestamp } from "@/lib/unix-timestamp";
+import { revalidatePath } from "next/cache";
 
 export const userSendMessage = async (message: string, gameId: string) => {
   const { userId } = await getUser();
@@ -22,6 +22,7 @@ export const userSendMessage = async (message: string, gameId: string) => {
         },
         gameId
       );
+      revalidatePath("/");
     } else {
       throw Error("PERMISSION DENIED");
     }

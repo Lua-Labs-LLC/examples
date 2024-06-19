@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { mqtt, iot } from "aws-iot-device-sdk-v2";
-import { ChatMessage, GameStatusMessage } from "@/models/message";
+import { ChatMessage, GameStatusMessage, Message } from "@/models/message";
 import { userSendMessage } from "@/server-actions/messages/user-send-message";
+import { Game } from "@/models/game";
 
 function createConnection(endpoint: string, authorizer: string, token: string) {
   const client = new mqtt.MqttClient();
@@ -23,7 +24,6 @@ export function useMqtt(
   token: string,
   initialMessages: ChatMessage[]
 ) {
-  console.log(initialMessages);
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [connection, setConnection] =
     useState<mqtt.MqttClientConnection | null>(null);
