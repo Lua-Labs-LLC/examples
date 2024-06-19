@@ -30,7 +30,7 @@ export const joinGame = async (gameId: string) => {
           "SET secondPlayerId = :secondPlayerId, #status = :status, timeToAccept = :timeToAccept",
         ExpressionAttributeValues: marshalledValues,
         ExpressionAttributeNames: {
-          "#status": "status", // This maps #status to the actual attribute name "status"
+          "#status": "status",
         },
         ConditionExpression: "attribute_not_exists(secondPlayerId)",
       })

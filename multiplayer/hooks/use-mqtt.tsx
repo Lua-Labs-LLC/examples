@@ -28,7 +28,6 @@ export function useMqtt(
     initialGame.chatHistory
   )
   const [game, setGame] = useState(initialGame)
-
   const [connection, setConnection] =
     useState<mqtt.MqttClientConnection | null>(null)
 
@@ -52,9 +51,14 @@ export function useMqtt(
         setMessages((prev) => [...prev, message])
       }
       if (message.type === "GameStatus") {
-        console.log(message.payload.status)
         setMessages((prev) => [...prev, message])
         setGame((prev) => ({ ...prev, status: message.payload.status }))
+      }
+      if (message.type === "GameAction") {
+        setGame((prev) => ({
+          ...prev,
+          gameHistory: [...prev.gameHistory, message],
+        }))
       }
     })
 
@@ -66,7 +70,7 @@ export function useMqtt(
       connection.disconnect()
       setConnection(null)
     }
-  }, [topic, endpoint, authorizer, token, game])
+  }, [topic, endpoint, authorizer, token])
 
   const sendMessage = useCallback(async (message: string, gameId: string) => {
     try {
@@ -76,5 +80,10 @@ export function useMqtt(
     }
   }, [])
 
-  return { messages, sendMessage, isConnected: !!connection, game }
+  return {
+    messages,
+    sendMessage,
+    isConnected: !!connection,
+    game,
+  }
 }

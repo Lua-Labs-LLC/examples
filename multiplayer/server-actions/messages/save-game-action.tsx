@@ -6,7 +6,7 @@ import { marshall } from "@aws-sdk/util-dynamodb"
 import "server-only"
 import { Resource } from "sst"
 
-export const saveMessage = async (message: Message, gameId: string) => {
+export const saveGameAction = async (message: Message, gameId: string) => {
   const { user } = await validateRequest()
   if (!user) throw new Error(`PERMISSION DENIED`)
   const dynamoDBClient = new DynamoDBClient({})
@@ -17,7 +17,7 @@ export const saveMessage = async (message: Message, gameId: string) => {
   const marshalledKey = marshall({ gameId: gameId })
   const marshalledValues = marshall({
     ":message": [messageItem],
-    ":empty_list": [], // Marshalling an empty list directly
+    ":empty_list": [],
   })
 
   try {
@@ -26,7 +26,7 @@ export const saveMessage = async (message: Message, gameId: string) => {
         TableName: Resource.GameTable.name,
         Key: marshalledKey,
         UpdateExpression:
-          "SET chatHistory = list_append(if_not_exists(chatHistory, :empty_list), :message)",
+          "SET gameHistory = list_append(if_not_exists(gameHistory, :empty_list), :message)",
         ExpressionAttributeValues: marshalledValues,
       })
     )

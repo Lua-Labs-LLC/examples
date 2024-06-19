@@ -1,13 +1,11 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { unstable_noStore as noStore } from "next/cache"
 import { useContext } from "react"
 import { GameContext } from "../../game-provider"
 import { Message } from "./message/message"
 
 export default function Chat() {
-  noStore()
   const { messages, sendMessage, game, isConnected } = useContext(GameContext)
   return (
     <div className=" flex h-[320px] w-[320px] flex-col justify-between">

@@ -6,7 +6,8 @@ import {
 } from "@aws-sdk/client-iot-data-plane"
 import "server-only"
 import { Resource } from "sst"
-import { saveMessage } from "./save-message"
+import { saveChatMessage } from "./save-chat-message"
+import { saveGameAction } from "./save-game-action"
 const client = new IoTDataPlaneClient({
   endpoint: `https://${Resource.MyRealtime.endpoint}`,
 })
@@ -14,7 +15,7 @@ const client = new IoTDataPlaneClient({
 const prefix = `${Resource.App.name}/${Resource.App.stage}`
 
 export const sendMessage = async (message: Message, gameId: string) => {
-  const topic = `${prefix}/${gameId}` // Specific topic for messages
+  const topic = `${prefix}/${gameId}`
 
   try {
     const command = new PublishCommand({
@@ -23,7 +24,11 @@ export const sendMessage = async (message: Message, gameId: string) => {
       qos: 1,
     })
 
-    await saveMessage(message, gameId)
+    if (message.type === "GameAction") {
+      await saveGameAction(message, gameId)
+    } else {
+      await saveChatMessage(message, gameId)
+    }
     await client.send(command)
     console.log("Message published successfully to topic:", topic)
   } catch (error) {

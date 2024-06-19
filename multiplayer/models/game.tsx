@@ -1,4 +1,4 @@
-import { ChatMessage } from "./message"
+import { ChatMessage, GameActionMessage } from "./message"
 
 export enum GameStatus {
   Created = "Created",
@@ -10,6 +10,7 @@ export enum GameStatus {
 export interface Game {
   gameId: string
   chatHistory: ChatMessage[]
+  gameHistory: GameActionMessage[]
   createdAt: number
   expiresAt: number
   initiatorId: string

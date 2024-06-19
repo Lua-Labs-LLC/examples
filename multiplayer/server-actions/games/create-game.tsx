@@ -26,6 +26,7 @@ export const createGame = async () => {
           expiresAt: { N: (Math.floor(Date.now() / 1000) + 86400).toString() },
           createdAt: { N: Math.floor(Date.now() / 1000).toString() },
           chatHistory: { L: [] },
+          gameHistory: { L: [] },
           constantKey: { S: "constantKey" },
         },
         ConditionExpression: "attribute_not_exists(gameId)",

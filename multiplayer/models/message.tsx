@@ -25,7 +25,7 @@ export interface GameActionMessage extends BaseMessage {
   payload: {
     userId: string
     timestamp: number
-    location: string
+    location: number
     type: keyof typeof ActionType
   }
 }

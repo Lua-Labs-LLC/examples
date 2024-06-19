@@ -12,6 +12,7 @@ export const GameContainer = async ({ gameId }: { gameId: string }) => {
   const endpoint = Resource.MyRealtime.endpoint
   const authorizer = Resource.MyRealtime.authorizer
   const { sessionId } = await getUser()
+
   return (
     <GameProvider
       game={game}
