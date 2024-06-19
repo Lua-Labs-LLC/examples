@@ -31,10 +31,10 @@ const GameProvider = ({
   authorizer,
   token,
 }: GameProviderProps) => {
-  const mqtt = useMqtt(topic, endpoint, authorizer, token, game.chatHistory);
+  const mqtt = useMqtt(topic, endpoint, authorizer, token, game);
   return (
     <>
-      <GameContext.Provider value={{ ...mqtt, game }}>
+      <GameContext.Provider value={{ ...mqtt }}>
         {children}
       </GameContext.Provider>
     </>

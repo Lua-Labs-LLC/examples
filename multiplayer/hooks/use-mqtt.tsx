@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { mqtt, iot } from "aws-iot-device-sdk-v2";
-import { ChatMessage, GameStatusMessage, Message } from "@/models/message";
+import { ChatMessage, Message } from "@/models/message";
 import { userSendMessage } from "@/server-actions/messages/user-send-message";
 import { Game } from "@/models/game";
 
@@ -22,9 +22,13 @@ export function useMqtt(
   endpoint: string,
   authorizer: string,
   token: string,
-  initialMessages: ChatMessage[]
+  initialGame: Game
 ) {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    initialGame.chatHistory
+  );
+  const [game, setGame] = useState(initialGame);
+
   const [connection, setConnection] =
     useState<mqtt.MqttClientConnection | null>(null);
 
@@ -43,8 +47,15 @@ export function useMqtt(
     connection.on("message", (_fullTopic, payload) => {
       const message = JSON.parse(
         new TextDecoder("utf8").decode(new Uint8Array(payload))
-      );
-      setMessages((prev) => [...prev, message]);
+      ) as Message;
+      if (message.type === "User") {
+        setMessages((prev) => [...prev, message]);
+      }
+      if (message.type === "GameStatus") {
+        console.log(message.payload.status);
+        setMessages((prev) => [...prev, message]);
+        setGame((prev) => ({ ...prev, status: message.payload.status }));
+      }
     });
 
     connection.on("error", console.error);
@@ -55,7 +66,7 @@ export function useMqtt(
       connection.disconnect();
       setConnection(null);
     };
-  }, [topic, endpoint, authorizer, token]);
+  }, [topic, endpoint, authorizer, token, game]);
 
   const sendMessage = useCallback(async (message: string, gameId: string) => {
     try {
@@ -65,5 +76,5 @@ export function useMqtt(
     }
   }, []);
 
-  return { messages, sendMessage, isConnected: !!connection };
+  return { messages, sendMessage, isConnected: !!connection, game };
 }
