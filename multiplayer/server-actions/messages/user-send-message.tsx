@@ -13,9 +13,8 @@ export const userSendMessage = async (message: string, gameId: string) => {
     if (game.initiatorId === userId || game.secondPlayerId === userId) {
       await sendMessage(
         {
-          type: MessageType.Chat,
+          type: "User",
           payload: {
-            type: "User",
             message,
             timestamp: getCurrentUnixTimestamp(),
             userId,

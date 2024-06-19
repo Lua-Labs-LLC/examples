@@ -9,20 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMqtt } from "@/hooks/use-mqtt";
 
-function createConnection(endpoint: string, authorizer: string, token: string) {
-  const client = new mqtt.MqttClient();
-  const id = window.crypto.randomUUID();
-
-  return client.new_connection(
-    iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
-      .with_clean_session(true)
-      .with_client_id(`client_${id}`)
-      .with_endpoint(endpoint)
-      .with_custom_authorizer("", authorizer, "", token || "")
-      .build()
-  );
-}
-
 export default function Chat({
   topic,
   endpoint,

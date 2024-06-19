@@ -1,12 +1,12 @@
 import { ChatMessage } from "@/models/message";
 import { UserMessage } from "./user-message/user-message";
-import { AdminMessage } from "./admin-message/admin-message";
+import { GameStatusMessage } from "./game-status-message/game-status-message";
 
 export const Message = ({ message }: { message: ChatMessage }) => {
-  switch (message.payload.type) {
+  switch (message.type) {
     case "User":
-      return <UserMessage payload={message.payload} />;
-    case "Admin":
-      return <AdminMessage payload={message.payload} />;
+      return <UserMessage message={message} />;
+    case "GameStatus":
+      return <GameStatusMessage message={message} />;
   }
 };

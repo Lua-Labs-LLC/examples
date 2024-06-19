@@ -1,9 +1,10 @@
 import { ChatMessage, Message } from "./message";
 
 export enum GameStatus {
-  Waiting = "Wating",
-  Starting = "Starting",
+  Created = "Created",
+  Waiting = "Waiting",
   Started = "Started",
+  Ended = "Ended",
 }
 
 export interface Game {

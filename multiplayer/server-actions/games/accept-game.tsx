@@ -31,7 +31,7 @@ export const acceptGame = async (gameId: string) => {
     if (
       game.initiatorId !== userId ||
       isCurrentTimeGreaterThan(game.timeToAccept) ||
-      game.status !== "Starting"
+      game.status !== "Waiting"
     ) {
       throw "ERROR";
     }
@@ -48,9 +48,9 @@ export const acceptGame = async (gameId: string) => {
     );
     await sendMessage(
       {
-        type: MessageType.Chat,
+        type: MessageType.GameStatus,
         payload: {
-          type: "Admin",
+          status: "Started",
           message: "Game Starting",
           timestamp: getCurrentUnixTimestamp(),
         },

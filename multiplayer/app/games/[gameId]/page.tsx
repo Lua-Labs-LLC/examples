@@ -22,7 +22,7 @@ export default async function Game({ params }: { params: { gameId: string } }) {
       {!game.secondPlayerId && game.initiatorId !== userId && (
         <JoinGame gameId={params.gameId}></JoinGame>
       )}
-      {game.status === "Starting" && game.initiatorId === userId && (
+      {game.status === "Waiting" && game.initiatorId === userId && (
         <AcceptGame gameId={params.gameId}></AcceptGame>
       )}
       <div className="flex flex-row w-full items-center justify-center gap-4">

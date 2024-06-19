@@ -19,7 +19,7 @@ export const joinGame = async (gameId: string) => {
   const marshalledValues = marshall({
     ":timeToAccept": getCurrentUnixTimestamp() + 30,
     ":secondPlayerId": userId,
-    ":status": GameStatus.Starting,
+    ":status": GameStatus.Waiting,
   });
 
   try {
@@ -38,9 +38,9 @@ export const joinGame = async (gameId: string) => {
     );
     await sendMessage(
       {
-        type: MessageType.Chat,
+        type: "GameStatus",
         payload: {
-          type: "Admin",
+          status: "Waiting",
           message: "Player Joined",
           timestamp: getCurrentUnixTimestamp(),
         },

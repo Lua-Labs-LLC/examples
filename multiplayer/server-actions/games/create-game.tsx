@@ -23,7 +23,7 @@ export const createGame = async () => {
         Item: {
           gameId: { S: gameId },
           initiatorId: { S: userId },
-          status: { S: GameStatus.Waiting },
+          status: { S: GameStatus.Created },
           expiresAt: { N: (Math.floor(Date.now() / 1000) + 86400).toString() },
           createdAt: { N: Math.floor(Date.now() / 1000).toString() },
           chatHistory: { L: [] },
@@ -34,9 +34,9 @@ export const createGame = async () => {
     );
     await sendMessage(
       {
-        type: MessageType.Chat,
+        type: "GameStatus",
         payload: {
-          type: "Admin",
+          status: "Created",
           message: `Game Created`,
           timestamp: getCurrentUnixTimestamp(),
         },
