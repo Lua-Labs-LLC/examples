@@ -1,5 +1,5 @@
-import { Suspense } from "react";
-import { GameContainer } from "./components/game-container/game-container";
+import { Suspense } from "react"
+import { GameContainer } from "./components/game-container/game-container"
 
 export default async function Game({ params }: { params: { gameId: string } }) {
   return (
@@ -8,5 +8,5 @@ export default async function Game({ params }: { params: { gameId: string } }) {
         <GameContainer gameId={params.gameId} />
       </Suspense>
     </>
-  );
+  )
 }

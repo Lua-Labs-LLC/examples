@@ -1,11 +1,11 @@
-import { SignIn } from "@/components/sign-in";
-import { getUser } from "@/auth/auth-guard";
-import { Logout } from "@/components/logout";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { getUser } from "@/auth/auth-guard"
+import { Logout } from "@/components/logout"
+import { SignIn } from "@/components/sign-in"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default async function Home() {
-  const { userId } = await getUser();
+  const { userId } = await getUser()
 
   return (
     <div className="flex flex-col items-center justify-center gap-6">
@@ -20,5 +20,5 @@ export default async function Home() {
         </>
       )}
     </div>
-  );
+  )
 }

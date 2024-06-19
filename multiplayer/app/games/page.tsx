@@ -1,10 +1,10 @@
-import { CreateGame } from "@/components/create-game";
-import { Button } from "@/components/ui/button";
-import { getRecentGames } from "@/server-actions/games/get-recent-games";
-import Link from "next/link";
+import { CreateGame } from "@/components/create-game"
+import { Button } from "@/components/ui/button"
+import { getRecentGames } from "@/server-actions/games/get-recent-games"
+import Link from "next/link"
 
 export default async function Games() {
-  const games = await getRecentGames();
+  const games = await getRecentGames()
 
   return (
     <>
@@ -19,10 +19,10 @@ export default async function Games() {
                   <Button variant="outline">{game.gameId}</Button>
                 </li>
               </Link>
-            );
+            )
           })}
         </ul>
       </div>
     </>
-  );
+  )
 }

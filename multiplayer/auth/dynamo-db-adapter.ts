@@ -1,40 +1,40 @@
 import {
+  DeleteItemCommand,
   DynamoDBClient,
   GetItemCommand,
   PutItemCommand,
-  DeleteItemCommand,
   QueryCommand,
   UpdateItemCommand,
-} from "@aws-sdk/client-dynamodb";
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+} from "@aws-sdk/client-dynamodb"
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import type {
   Adapter,
   DatabaseSession,
-  RegisteredDatabaseSessionAttributes,
   DatabaseUser,
+  RegisteredDatabaseSessionAttributes,
   RegisteredDatabaseUserAttributes,
   UserId,
-} from "lucia";
+} from "lucia"
 
 interface UserDoc extends RegisteredDatabaseUserAttributes {
-  userId: UserId;
+  userId: UserId
 }
 
 interface SessionDoc extends RegisteredDatabaseSessionAttributes {
-  sessionId: string;
-  userId: UserId;
-  expiresAt: number;
+  sessionId: string
+  userId: UserId
+  expiresAt: number
 }
 
 export class DynamoDBAdapter implements Adapter {
-  private client: DynamoDBClient;
-  private userTable: string;
-  private sessionTable: string;
+  private client: DynamoDBClient
+  private userTable: string
+  private sessionTable: string
 
   constructor(client: DynamoDBClient, userTable: string, sessionTable: string) {
-    this.client = client;
-    this.userTable = userTable;
-    this.sessionTable = sessionTable;
+    this.client = client
+    this.userTable = userTable
+    this.sessionTable = sessionTable
   }
 
   public async deleteSession(sessionId: string): Promise<void> {
@@ -43,7 +43,7 @@ export class DynamoDBAdapter implements Adapter {
         TableName: this.sessionTable,
         Key: marshall({ sessionId }),
       })
-    );
+    )
   }
 
   public async deleteUserSessions(userId: UserId): Promise<void> {
@@ -57,10 +57,10 @@ export class DynamoDBAdapter implements Adapter {
           ":userId": userId,
         }),
       })
-    );
+    )
 
     for (const item of result.Items || []) {
-      await this.deleteSession(item.sessionId.S as string);
+      await this.deleteSession(item.sessionId.S as string)
     }
   }
 
@@ -72,31 +72,31 @@ export class DynamoDBAdapter implements Adapter {
         TableName: this.sessionTable,
         Key: marshall({ sessionId }),
       })
-    );
+    )
 
     if (!sessionResult.Item) {
-      return [null, null];
+      return [null, null]
     }
 
     const session = transformIntoDatabaseSession(
       unmarshall(sessionResult.Item) as SessionDoc
-    );
+    )
 
     const userResult = await this.client.send(
       new GetItemCommand({
         TableName: this.userTable,
         Key: marshall({ userId: session.userId }),
       })
-    );
+    )
 
     if (!userResult.Item) {
-      return [session, null];
+      return [session, null]
     }
 
     const user = transformIntoDatabaseUser(
       unmarshall(userResult.Item) as UserDoc
-    );
-    return [session, user];
+    )
+    return [session, user]
   }
 
   public async getUserSessions(userId: UserId): Promise<DatabaseSession[]> {
@@ -109,11 +109,11 @@ export class DynamoDBAdapter implements Adapter {
           ":userId": userId,
         }),
       })
-    );
+    )
 
     return (result.Items || []).map((item) =>
       transformIntoDatabaseSession(unmarshall(item) as SessionDoc)
-    );
+    )
   }
 
   public async setSession(session: DatabaseSession): Promise<void> {
@@ -127,7 +127,7 @@ export class DynamoDBAdapter implements Adapter {
           ...session.attributes,
         }),
       })
-    );
+    )
   }
 
   public async updateSessionExpiration(
@@ -143,7 +143,7 @@ export class DynamoDBAdapter implements Adapter {
           ":expiresAt": Math.floor(expiresAt.getTime() / 1000),
         }),
       })
-    );
+    )
   }
 
   public async deleteExpiredSessions(): Promise<void> {
@@ -153,16 +153,16 @@ export class DynamoDBAdapter implements Adapter {
 }
 
 function transformIntoDatabaseUser(userDoc: UserDoc): DatabaseUser {
-  const { userId: id, ...attributes } = userDoc;
-  return { id, attributes };
+  const { userId: id, ...attributes } = userDoc
+  return { id, attributes }
 }
 
 function transformIntoDatabaseSession(sessionDoc: SessionDoc): DatabaseSession {
-  const { sessionId: id, userId, expiresAt, ...attributes } = sessionDoc;
+  const { sessionId: id, userId, expiresAt, ...attributes } = sessionDoc
   return {
     id,
     userId,
     expiresAt: new Date(sessionDoc.expiresAt * 1000),
     attributes,
-  };
+  }
 }

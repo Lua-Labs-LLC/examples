@@ -1,28 +1,27 @@
-"use client";
+"use client"
 
-import { useMqtt } from "@/hooks/use-mqtt";
-import { Game } from "@/models/game";
-import { ChatMessage } from "@/models/message";
-import { ReactNode, createContext, useContext } from "react";
-import { Resource } from "sst";
+import { useMqtt } from "@/hooks/use-mqtt"
+import { Game } from "@/models/game"
+import { ChatMessage } from "@/models/message"
+import { ReactNode, createContext } from "react"
 
 interface GameProviderProps {
-  children: ReactNode;
-  game: Game;
-  topic: string;
-  endpoint: string;
-  authorizer: string;
-  token: string;
+  children: ReactNode
+  game: Game
+  topic: string
+  endpoint: string
+  authorizer: string
+  token: string
 }
 
 interface GameState {
-  game: Game;
-  messages: ChatMessage[];
-  sendMessage: (message: string, gameId: string) => Promise<void>;
-  isConnected: boolean;
+  game: Game
+  messages: ChatMessage[]
+  sendMessage: (message: string, gameId: string) => Promise<void>
+  isConnected: boolean
 }
 
-export const GameContext = createContext({} as GameState);
+export const GameContext = createContext({} as GameState)
 const GameProvider = ({
   children,
   game,
@@ -31,14 +30,14 @@ const GameProvider = ({
   authorizer,
   token,
 }: GameProviderProps) => {
-  const mqtt = useMqtt(topic, endpoint, authorizer, token, game);
+  const mqtt = useMqtt(topic, endpoint, authorizer, token, game)
   return (
     <>
       <GameContext.Provider value={{ ...mqtt }}>
         {children}
       </GameContext.Provider>
     </>
-  );
-};
+  )
+}
 
-export default GameProvider;
+export default GameProvider

@@ -1,15 +1,15 @@
-"use server";
+"use server"
 
-import { sendMessage } from "./send-message";
-import { getGameById } from "../games/get-game-by-id";
-import { getUser } from "@/auth/auth-guard";
-import { getCurrentUnixTimestamp } from "@/lib/unix-timestamp";
-import { revalidatePath } from "next/cache";
+import { getUser } from "@/auth/auth-guard"
+import { getCurrentUnixTimestamp } from "@/lib/unix-timestamp"
+import { revalidatePath } from "next/cache"
+import { getGameById } from "../games/get-game-by-id"
+import { sendMessage } from "./send-message"
 
 export const userSendMessage = async (message: string, gameId: string) => {
-  const { userId } = await getUser();
+  const { userId } = await getUser()
   try {
-    const game = await getGameById(gameId);
+    const game = await getGameById(gameId)
     if (game.initiatorId === userId || game.secondPlayerId === userId) {
       await sendMessage(
         {
@@ -21,12 +21,12 @@ export const userSendMessage = async (message: string, gameId: string) => {
           },
         },
         gameId
-      );
-      revalidatePath("/");
+      )
+      revalidatePath("/")
     } else {
-      throw Error("PERMISSION DENIED");
+      throw Error("PERMISSION DENIED")
     }
   } catch (error) {
-    console.error("Failed to publish message:", error);
+    console.error("Failed to publish message:", error)
   }
-};
+}

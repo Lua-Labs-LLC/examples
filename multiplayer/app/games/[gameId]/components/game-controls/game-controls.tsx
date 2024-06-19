@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { useContext } from "react";
-import { GameContext } from "../../game-provider";
-import { JoinGame } from "@/components/join-game";
-import { AcceptGame } from "@/components/accept-game";
-import { AppContext } from "@/providers/app-provider";
+import { AcceptGame } from "@/components/accept-game"
+import { JoinGame } from "@/components/join-game"
+import { AppContext } from "@/providers/app-provider"
+import { useContext } from "react"
+import { GameContext } from "../../game-provider"
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 
 export const GameControls = () => {
-  const { game } = useContext(GameContext);
-  const { userId } = useContext(AppContext);
+  const { game } = useContext(GameContext)
+  const { userId } = useContext(AppContext)
   return (
     <>
       {game.status === "Created" &&
@@ -43,5 +43,5 @@ export const GameControls = () => {
         </Dialog>
       )}
     </>
-  );
-};
+  )
+}

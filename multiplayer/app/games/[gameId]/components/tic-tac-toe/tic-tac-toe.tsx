@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react"
 
 // Define a type for the board cells, which can be 'X', 'O', or null
-type Cell = "X" | "O" | null;
+type Cell = "X" | "O" | null
 
 // Define the component as a functional React component
 export const TicTacToe: React.FC = () => {
   // Define state for the board, turn indicator, and winner using the Cell type
-  const [board, setBoard] = useState<Cell[]>(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState<boolean>(true);
-  const [winner, setWinner] = useState<string | null>(null);
+  const [board, setBoard] = useState<Cell[]>(Array(9).fill(null))
+  const [isXNext, setIsXNext] = useState<boolean>(true)
+  const [winner, setWinner] = useState<string | null>(null)
 
   // Helper function to determine the winner
   const calculateWinner = (squares: Cell[]): string | null => {
@@ -23,49 +23,49 @@ export const TicTacToe: React.FC = () => {
       [2, 5, 8], // Columns
       [0, 4, 8],
       [2, 4, 6], // Diagonals
-    ];
+    ]
 
     for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
+      const [a, b, c] = lines[i]
       if (
         squares[a] &&
         squares[a] === squares[b] &&
         squares[a] === squares[c]
       ) {
-        return squares[a];
+        return squares[a]
       }
     }
-    return null;
-  };
+    return null
+  }
 
   // Effect to check for a winner after every move
   useEffect(() => {
-    const currentWinner = calculateWinner(board);
+    const currentWinner = calculateWinner(board)
     if (currentWinner) {
-      setWinner(currentWinner);
+      setWinner(currentWinner)
     } else if (board.every((cell) => cell !== null)) {
-      setWinner("Tie");
+      setWinner("Tie")
     }
-  }, [board]);
+  }, [board])
 
   // Handle cell click
   const handleClick = (index: number): void => {
     if (board[index] !== null || winner) {
-      return; // Ignore the click if the cell is already filled or the game is over
+      return // Ignore the click if the cell is already filled or the game is over
     }
 
-    const newBoard = [...board];
-    newBoard[index] = isXNext ? "X" : "O";
-    setBoard(newBoard);
-    setIsXNext(!isXNext); // Switch turns
-  };
+    const newBoard = [...board]
+    newBoard[index] = isXNext ? "X" : "O"
+    setBoard(newBoard)
+    setIsXNext(!isXNext) // Switch turns
+  }
 
   // Reset game
   const resetGame = (): void => {
-    setBoard(Array(9).fill(null));
-    setIsXNext(true);
-    setWinner(null);
-  };
+    setBoard(Array(9).fill(null))
+    setIsXNext(true)
+    setWinner(null)
+  }
 
   return (
     <div>
@@ -100,5 +100,5 @@ export const TicTacToe: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

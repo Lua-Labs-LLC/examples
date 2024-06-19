@@ -1,12 +1,12 @@
-"use server";
+"use server"
 
-import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
-import { Resource } from "sst";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { Game } from "@/models/game";
+import { Game } from "@/models/game"
+import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb"
+import { unmarshall } from "@aws-sdk/util-dynamodb"
+import { Resource } from "sst"
 
 export const getRecentGames = async () => {
-  const dynamoDBClient = new DynamoDBClient({});
+  const dynamoDBClient = new DynamoDBClient({})
 
   try {
     const result = await dynamoDBClient.send(
@@ -20,13 +20,13 @@ export const getRecentGames = async () => {
         ScanIndexForward: false, // false to sort by createdAt in descending order
         Limit: 10, // limit to 10 items
       })
-    );
+    )
 
-    if (!result.Items) throw new Error(`Failed to retrieve recent games`);
-    const games = result.Items.map((item) => unmarshall(item)) as Game[];
-    return games;
+    if (!result.Items) throw new Error(`Failed to retrieve recent games`)
+    const games = result.Items.map((item) => unmarshall(item)) as Game[]
+    return games
   } catch (error) {
-    console.error("Error querying DynamoDB:", error);
-    throw new Error(`Failed to retrieve recent games: ${error}`);
+    console.error("Error querying DynamoDB:", error)
+    throw new Error(`Failed to retrieve recent games: ${error}`)
   }
-};
+}

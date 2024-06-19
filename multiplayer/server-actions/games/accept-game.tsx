@@ -1,39 +1,39 @@
-"use server";
+"use server"
 
-import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
-import { Resource } from "sst";
-import { marshall } from "@aws-sdk/util-dynamodb";
-import { getUser } from "@/auth/auth-guard";
-import { revalidatePath } from "next/cache";
-import { sendMessage } from "../messages/send-message";
+import { getUser } from "@/auth/auth-guard"
 import {
   getCurrentUnixTimestamp,
   isCurrentTimeGreaterThan,
-} from "@/lib/unix-timestamp";
-import { getGameById } from "./get-game-by-id";
-import { GameStatus } from "@/models/game";
-import { MessageType } from "@/models/message";
+} from "@/lib/unix-timestamp"
+import { GameStatus } from "@/models/game"
+import { MessageType } from "@/models/message"
+import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb"
+import { marshall } from "@aws-sdk/util-dynamodb"
+import { revalidatePath } from "next/cache"
+import { Resource } from "sst"
+import { sendMessage } from "../messages/send-message"
+import { getGameById } from "./get-game-by-id"
 
 export const acceptGame = async (gameId: string) => {
-  const { userId } = await getUser();
+  const { userId } = await getUser()
 
-  if (!userId) throw new Error(`PERMISSION DENIED`);
-  const dynamoDBClient = new DynamoDBClient({});
+  if (!userId) throw new Error(`PERMISSION DENIED`)
+  const dynamoDBClient = new DynamoDBClient({})
 
-  const marshalledKey = marshall({ gameId: gameId });
+  const marshalledKey = marshall({ gameId: gameId })
   const marshalledValues = marshall({
     ":status": GameStatus.Started,
-  });
+  })
 
   try {
-    const game = await getGameById(gameId);
+    const game = await getGameById(gameId)
 
     if (
       game.initiatorId !== userId ||
       isCurrentTimeGreaterThan(game.timeToAccept) ||
       game.status !== "Waiting"
     ) {
-      throw "ERROR";
+      throw "ERROR"
     }
     await dynamoDBClient.send(
       new UpdateItemCommand({
@@ -45,7 +45,7 @@ export const acceptGame = async (gameId: string) => {
           "#status": "status",
         },
       })
-    );
+    )
     await sendMessage(
       {
         type: MessageType.GameStatus,
@@ -56,10 +56,10 @@ export const acceptGame = async (gameId: string) => {
         },
       },
       gameId
-    );
-    revalidatePath("/");
+    )
+    revalidatePath("/")
   } catch (error) {
-    console.error("Error updating DynamoDB:", error);
-    throw new Error(`Failed to update item: ${error}`);
+    console.error("Error updating DynamoDB:", error)
+    throw new Error(`Failed to update item: ${error}`)
   }
-};
+}

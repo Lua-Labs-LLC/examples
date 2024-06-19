@@ -1,4 +1,4 @@
-import { GameStatus } from "./game";
+import { GameStatus } from "./game"
 
 export enum MessageType {
   GameAction = "GameAction",
@@ -17,37 +17,37 @@ export enum ChatType {
 }
 
 export interface BaseMessage {
-  type: keyof typeof MessageType;
+  type: keyof typeof MessageType
 }
 
 export interface GameActionMessage extends BaseMessage {
-  type: "GameAction";
+  type: "GameAction"
   payload: {
-    userId: string;
-    timestamp: number;
-    location: string;
-    type: keyof typeof ActionType;
-  };
+    userId: string
+    timestamp: number
+    location: string
+    type: keyof typeof ActionType
+  }
 }
 
 export interface GameStatusMessage extends BaseMessage {
-  type: "GameStatus";
+  type: "GameStatus"
   payload: {
-    status: keyof typeof GameStatus;
-    timestamp: number;
-    message: string;
-  };
+    status: keyof typeof GameStatus
+    timestamp: number
+    message: string
+  }
 }
 
 export interface UserMessage extends BaseMessage {
-  type: "User";
+  type: "User"
   payload: {
-    timestamp: number;
-    message: string;
-    userId: string;
-  };
+    timestamp: number
+    message: string
+    userId: string
+  }
 }
 
-export type ChatMessage = UserMessage | GameStatusMessage;
+export type ChatMessage = UserMessage | GameStatusMessage
 
-export type Message = GameActionMessage | UserMessage | GameStatusMessage;
+export type Message = GameActionMessage | UserMessage | GameStatusMessage

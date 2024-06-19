@@ -6,7 +6,7 @@ export default $config({
       name: "multiplayer",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "aws",
-    };
+    }
   },
   async run() {
     const userTable = new sst.aws.Dynamo("UserTable", {
@@ -14,7 +14,7 @@ export default $config({
         userId: "string",
       },
       primaryIndex: { hashKey: "userId" },
-    });
+    })
 
     const sessionTable = new sst.aws.Dynamo("SessionTable", {
       fields: {
@@ -26,7 +26,7 @@ export default $config({
       globalIndexes: {
         UserIndex: { hashKey: "userId", rangeKey: "expiresAt" },
       },
-    });
+    })
     const gameTable = new sst.aws.Dynamo("GameTable", {
       fields: {
         gameId: "string",
@@ -50,17 +50,17 @@ export default $config({
       },
       stream: "new-and-old-images",
       ttl: "expiresAt",
-    });
+    })
 
     const realtime = new sst.aws.Realtime("MyRealtime", {
       authorizer: {
         handler: "authorizer.handler",
         link: [sessionTable, userTable, gameTable],
       },
-    });
+    })
 
     new sst.aws.Nextjs("MyWeb", {
       link: [realtime, sessionTable, userTable, gameTable],
-    });
+    })
   },
-});
+})

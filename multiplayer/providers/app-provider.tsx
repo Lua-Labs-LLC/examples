@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { ReactNode, createContext } from "react";
+import { ReactNode, createContext } from "react"
 
 interface AppProviderProps {
-  children: ReactNode;
-  userId?: string;
+  children: ReactNode
+  userId?: string
 }
 
 interface AppState {
-  userId?: string;
+  userId?: string
 }
-export const AppContext = createContext({} as AppState);
+export const AppContext = createContext({} as AppState)
 const AppProvider = ({ children, userId }: AppProviderProps) => {
   return (
     <>
       <AppContext.Provider value={{ userId }}>{children}</AppContext.Provider>
     </>
-  );
-};
+  )
+}
 
-export default AppProvider;
+export default AppProvider
